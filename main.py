@@ -1,8 +1,10 @@
 from flask import Flask, render_template
+from data import db_session
 
-# HTML шаблон слетает из-за комментариев поэтому напишу здесь.  На место # поставить относительный адресс войти потом поменять на jinja if
-# Специальный комментарий для Валентина Я не буду убирать закругление углов с фотки крузака, что-то не нравится - убери её и сделай домашнюю страницу как на нормальных сайтах
-# Блок контент и эндблок добавите сами
+# Данные для входа с целью отладки/проверки
+# user: Test User
+# password: testuser2281337
+# (НА ДАННОМ ЭТАПЕ РАЗРАБОТКИ НЕ РАБОТАЕТ)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -15,6 +17,7 @@ def home():
 
 
 def main():
+    db_session.global_init("db/TLC_db.db")
     app.run()
 
 
