@@ -1,12 +1,17 @@
+import os
+import datetime as dt
+import random
 from flask import Flask, render_template, redirect, session
 from data import db_session
 from data.users import User
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user
 from forms.user import RegisterForm, FinishRegistrationForm, LoginForm
 from mailer import send_email, EMailText
+from forms.services_town_ask import TownForm
+from functions import search
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+app.config['SECRET_KEY'] = "%032x" % random.getrandbits(128)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -14,7 +19,7 @@ login_manager.init_app(app)
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('index.html')
+    return render_template('index.html', title='Главная')
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -66,8 +71,35 @@ def login():
             login_user(user, remember=form.remember_me.data)
             return redirect('/home')
         else:
-            return render_template('login.html',itle='Вход', message="Неправильный логин или пароль", form=form)
+            return render_template('login.html', itle='Вход', message="Неправильный логин или пароль", form=form)
     return render_template('login.html', title='Вход', form=form)
+
+
+@app.route('/services', methods=['GET', 'POST'])
+def services_ask():
+    form = TownForm()
+    if form.validate_on_submit():
+        # print(form.town.data)
+        return redirect(f'/services/{form.town.data}')
+    return render_template('services_ask.html', title='Введите город', form=form)
+
+
+@app.route('/services/<town>')
+def services(town):
+    services = search.search(town)
+    title = f'Сервисы в городе {town.capitalize()}'
+    return render_template('services.html', title=title, services=services)
+
+
+@app.after_request
+def after_request(response):
+    for currentdir, dirs, files in os.walk('static/cash'):
+        for k in files:
+            create_data = dt.datetime.fromtimestamp(os.path.getctime('static/cash/' + k))
+            a = dt.datetime.now() - create_data
+            if a >= dt.timedelta(minutes=1):
+                os.remove('static/cash/' + k)
+    return response
 
 
 @login_manager.user_loader
