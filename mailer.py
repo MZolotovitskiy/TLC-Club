@@ -4,8 +4,8 @@ from email.mime.text import MIMEText
 from random import randrange
 
 server = 'smtp.yandex.ru'
-user = 'bevqnt@ya.ru'
-password = '1625341357'
+user = ''
+password = ''
 
 
 def send_email(recipient, subject, text):
