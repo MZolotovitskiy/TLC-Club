@@ -4,8 +4,8 @@ from email.mime.text import MIMEText
 from random import randrange
 
 server = 'smtp.yandex.ru'
-user = 'bevqnt@ya.ru'
-password = '1625341357'
+user = 'tlc.club@ya.ru'
+password = 'ubwvlzqvqnvujupz'
 
 
 def send_email(recipient, subject, text):
@@ -35,7 +35,8 @@ def send_email(recipient, subject, text):
 
 class EMailText:
     def __init__(self):
-        self.text_registration = '''<p>Спасибо за регистрацию на сайте TLC-club! Для подтверждения регистрации введите код {} на сайте.</p>
+        self.text_registration = '''<p>Спасибо за регистрацию на сайте TLC-club!
+        Для подтверждения регистрации введите код {} на сайте.</p>
 
         <p><b>С уважением, команда TLC-Club!</b></p>'''
 
@@ -43,4 +44,3 @@ class EMailText:
         code = str(randrange(1000, 9999))
         text = self.text_registration.replace('{}', code)
         return text, code
-

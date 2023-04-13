@@ -5,15 +5,6 @@
 <form action="" method="post">
     {{ form.hidden_tag() }}
     <p>
-        {{ form.login.label }}<br>
-        {{ form.login(class="form-control") }}<br>
-        {% for error in form.login.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
         {{ form.email.label }}<br>
         {{ form.email(class="form-control", type="email") }}<br>
         {% for error in form.email.errors %}
@@ -50,7 +41,9 @@
     {% endfor %}
     </p>
 
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-    {{message}}
+    <p>{{ form.submit(type="submit", class="btn btn-dark") }}</p>
+    {% if message %}
+    <p class="alert alert-danger" role="alert">{{message}}</p>
+    {% endif %}
 </form>
 {% endblock %}

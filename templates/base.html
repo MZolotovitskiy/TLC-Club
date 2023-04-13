@@ -35,11 +35,17 @@
                         <a class="nav-link" href="#">Обзоры</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="#">Главная</a>
+                            <a class="nav-link" href="/home">Главная</a>
                     </li>
+                    {% if current_user.is_authenticated %}
                     <li>
-                        <a class="nav-link" href="#">Войти</a>
+                            <a class="nav-link" href="#">Личный кабинет</a>
                     </li>
+                    {% else %}
+                    <li>
+                        <a class="nav-link" href="/login">Войти</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
