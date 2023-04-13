@@ -3,5 +3,20 @@
 {% block content %}
 <h1>{{user.username}}</h1>
 <h3>{{user.email}}</h3>
-
+{% if reviews %}
+    <h2>Обзоры</h2>
+    {% for item in reviews %}
+        <div><a href="{{reviews[item]}}">{{item.title}}</a></div>
+    {% endfor %}
+{%else%}
+    <h2>Обзоров нету</h2>
+{%endif%}
+{% if threads %}
+    <h2>Треды</h2>
+    {% for item in threads %}
+        <div><a href="{{threads[item]}}">{{item.title}}</a></div>
+    {% endfor %}
+{%else%}
+    <h2>Тредов нету</h2>
+{%endif%}
 {% endblock %}
