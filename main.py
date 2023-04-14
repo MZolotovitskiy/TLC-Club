@@ -4,6 +4,9 @@ import random
 from flask import Flask, render_template, redirect, session
 from data import db_session
 from data.users import User
+from data.reviews import Review
+from data.threads import Thread
+from data.messages import Message
 from flask_login import LoginManager, login_user
 from forms.user import RegisterForm, FinishRegistrationForm, LoginForm
 from mailer import send_email, EMailText
@@ -102,10 +105,54 @@ def after_request(response):
     return response
 
 
+@app.route('/account/<int:userid>')
+def account(userid):
+    # Тут крч должен быть запрос в БД с поиском юзера с указанным ID
+
+    # потом крч если нету юзера то надо вернуть 404
+
+    # Ниже будет User для теста
+    u = User()
+    u.username = 'Sirenogoloviy'
+    u.email = 's.tiktok-trend@podkraduli.ru'
+    # тут крч должен быть поиск в бд по id юзера всяких там сообщений и тд ну ты пон
+
+    reviews = dict()
+
+    r1 = Review()
+    r1.title = 'Обзор на новый звуковой сигнал'
+    r1_url = 'r1'
+    reviews[r1] = r1_url
+
+    print(reviews)
+
+    r2 = Review()
+    r2.title = 'Обзор на новую акустику'
+    r2_url = 'r2'
+    reviews[r2] = r2_url
+
+    print(reviews, r1)
+
+    # reviews = dict()
+
+    threads = dict()
+
+    # ну крч тут про треды такая же система
+
+    # я так подумал и сообщения не будем сюда писать типо зачем лол
+
+    return render_template('account.html', title=f'Аккаунт {u.username}', user=u, reviews=reviews, threads=threads)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.get(User, int(user_id))
+
+
+@app.route('/myaccount')
+def myaccount():
+    abort(503)
 
 
 def main():
