@@ -105,43 +105,23 @@ def after_request(response):
     return response
 
 
-@app.route('/account/<int:userid>')
-def account(userid):
-    # Тут крч должен быть запрос в БД с поиском юзера с указанным ID
+@app.route('/account/<int:user_id>')
+def account(user_id):
+    db_sess = db_session.create_session()
+    user = db_sess.get(User, int(user_id))
+    reviews, threads = [], []
+    for review in db_sess.query(Review).filter(Review.author_id == user_id):
+        reviews.append(review)
+    for thread in db_sess.query(Thread).filter(Thread.author_id == user_id):
+        threads.append(thread)
+    return render_template('account.html', title=f'Аккаунт {user.username}',
+                           user=user, reviews=reviews, threads=threads)
 
-    # потом крч если нету юзера то надо вернуть 404
 
-    # Ниже будет User для теста
-    u = User()
-    u.username = 'Sirenogoloviy'
-    u.email = 's.tiktok-trend@podkraduli.ru'
-    # тут крч должен быть поиск в бд по id юзера всяких там сообщений и тд ну ты пон
+@app.route('/forum')
+def forum():
+    db_sess = db_session.create_session()
 
-    reviews = dict()
-
-    r1 = Review()
-    r1.title = 'Обзор на новый звуковой сигнал'
-    r1_url = 'r1'
-    reviews[r1] = r1_url
-
-    print(reviews)
-
-    r2 = Review()
-    r2.title = 'Обзор на новую акустику'
-    r2_url = 'r2'
-    reviews[r2] = r2_url
-
-    print(reviews, r1)
-
-    # reviews = dict()
-
-    threads = dict()
-
-    # ну крч тут про треды такая же система
-
-    # я так подумал и сообщения не будем сюда писать типо зачем лол
-
-    return render_template('account.html', title=f'Аккаунт {u.username}', user=u, reviews=reviews, threads=threads)
 
 
 @login_manager.user_loader

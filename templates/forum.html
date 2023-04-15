@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Актуальные треды на форуме</h1>
+{% if threads %}
+{% for item in threads %}
+    <div class="card">
+      <div class="card-header">{{tem.author_id}}</div>
+      <h5 class="card-title">{{item.title}} {{item.date_of_creation}}</h5>
+      <div class="card-body">
+        <p class="card-text">{{item.content}}</p>
+        <a href="/threads/{{item.id}}" class="btn btn-dark">Перейти к обсуждению</a>
+      </div>
+    </div>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

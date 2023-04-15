@@ -11,6 +11,7 @@ class Message(SqlAlchemyBase):
     content = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     thread_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("threads.id"))
+    date_of_creation = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
     author = orm.relationship('User')
     thread = orm.relationship('Thread')
 

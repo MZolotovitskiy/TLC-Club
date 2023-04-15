@@ -6,7 +6,13 @@
 {% if reviews %}
     <h2>Обзоры</h2>
     {% for item in reviews %}
-        <div><a href="{{reviews[item]}}">{{item.title}}</a></div>
+        <div class="card">
+          <div class="card-header">{{item.title}}</div>
+          <div class="card-body">
+            <p class="card-text">{{item.content}}</p>
+            <a href="/reviews/{{item.id}}" class="btn btn-dark">Перейти к чтению</a>
+          </div>
+        </div>
     {% endfor %}
 {%else%}
     <h2>Обзоров нету</h2>
@@ -14,7 +20,13 @@
 {% if threads %}
     <h2>Треды</h2>
     {% for item in threads %}
-        <div><a href="{{threads[item]}}">{{item.title}}</a></div>
+        <div class="card">
+          <div class="card-header">{{item.title}}</div>
+          <div class="card-body">
+            <p class="card-text">{{item.content}}</p>
+            <a href="/threads/{{item.id}}" class="btn btn-dark">Перейти к обсуждению</a>
+          </div>
+        </div>
     {% endfor %}
 {%else%}
     <h2>Тредов нету</h2>
