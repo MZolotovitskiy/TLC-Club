@@ -1,6 +1,7 @@
 {% extends "base.html" %}
-
 {% block content %}
+
+
 <h1>{{user.username}}</h1>
 <h3>{{user.email}}</h3>
 {% if reviews %}
@@ -22,11 +23,11 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                           </div>
                           <div class="modal-body">
-                            <p>Вы хотите удалить обзор "{{item.title}}"</p>
+                            <p>Вы точно хотите удалить обзор "{{item.title}}"?</p>
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Отмена</button>
-                            <button type="button" class="btn btn-danger">Удалить</button>
+                            <a type="button" class="btn btn-danger" href="/reviews_delete/{{item.id}}">Удалить</a>
                           </div>
                         </div>
                       </div>
@@ -34,13 +35,11 @@
                 {% endif %}
           </div>
         </div>
-
-
-
     {% endfor %}
 {%else%}
     <h2>Обзоров нету</h2>
 {%endif%}
+
 {% if threads %}
     <h2>Треды</h2>
     {% for item in threads %}
@@ -60,11 +59,11 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                           </div>
                           <div class="modal-body">
-                            <p>Вы хотите удалить тред "{{item.title}}"</p>
+                            <p>Вы точно хотите удалить тред "{{item.title}}"?</p>
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Отмена</button>
-                            <button type="button" class="btn btn-danger">Удалить</button>
+                            <a type="button" class="btn btn-danger" href="/threads_delete/{{item.id}}">Удалить</a>
                           </div>
                         </div>
                       </div>
@@ -76,4 +75,6 @@
 {%else%}
     <h2>Тредов нету</h2>
 {%endif%}
+
+
 {% endblock %}
