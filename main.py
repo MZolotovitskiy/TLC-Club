@@ -22,8 +22,8 @@ def main():
     app.run()
 
 
-@app.route('/account/<int:userid>')
-def account(userid):
+@app.route('/myaccount')
+def myaccount():
     # Тут крч должен быть запрос в БД с поиском юзера с указанным ID
 
     # потом крч если нету юзера то надо вернуть 404
@@ -58,12 +58,8 @@ def account(userid):
 
     # я так подумал и сообщения не будем сюда писать типо зачем лол
 
-    return render_template('account.html', title=f'Аккаунт {u.username}', user=u, reviews=reviews, threads=threads)
-
-
-@app.route('/myaccount')
-def myaccount():
-    abort(503)
+    return render_template('account.html', title=f'Аккаунт {u.username}', user=u, reviews=reviews,
+                           threads=reviews, personal=True)
 
 
 main()

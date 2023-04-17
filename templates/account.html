@@ -6,7 +6,37 @@
 {% if reviews %}
     <h2>Обзоры</h2>
     {% for item in reviews %}
-        <div><a href="{{reviews[item]}}">{{item.title}}</a></div>
+        <div class="card">
+          <div class="card-header">{{item.title}}</div>
+          <div class="card-body">
+            <p class="card-text">{{item.content}}</p>
+            <a href="/reviews/{{item.id}}" class="btn btn-dark">Перейти к чтению</a>
+                {% if personal %}
+                    <a href="/reviews/{{item.id}}/change" class="btn btn-warning">Изменить</a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ReviewModal">Удалить</button>
+                    <div class="modal fade" id="ReviewModal" tabindex="-1" aria-labelledby="ReviewModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="ReviewModalLabel">Подтвердите действие</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Вы хотите удалить обзор "{{item.title}}"</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Отмена</button>
+                            <button type="button" class="btn btn-danger">Удалить</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                {% endif %}
+          </div>
+        </div>
+
+
+
     {% endfor %}
 {%else%}
     <h2>Обзоров нету</h2>
@@ -14,7 +44,34 @@
 {% if threads %}
     <h2>Треды</h2>
     {% for item in threads %}
-        <div><a href="{{threads[item]}}">{{item.title}}</a></div>
+        <div class="card">
+          <div class="card-header">{{item.title}}</div>
+          <div class="card-body">
+            <p class="card-text">{{item.content}}</p>
+            <a href="/threads/{{item.id}}" class="btn btn-dark">Перейти к обсуждению</a>
+                {% if personal %}
+                    <a href="/threads/{{item.id}}/change" class="btn btn-warning">Изменить</a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ThreadsModal">Удалить</button>
+                    <div class="modal fade" id="ThreadsModal" tabindex="-1" aria-labelledby="ThreadsModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="ThreadsModalLabel">Подтвердите действие</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Вы хотите удалить тред "{{item.title}}"</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Отмена</button>
+                            <button type="button" class="btn btn-danger">Удалить</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                {% endif %}
+          </div>
+        </div>
     {% endfor %}
 {%else%}
     <h2>Тредов нету</h2>
