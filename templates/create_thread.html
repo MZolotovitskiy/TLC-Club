@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Создание Треда</h1>
+<form action="" method="post" name="simple" enctype="multipart/form-data">
+    <div>{{ form.csrf_token }}</div>
+    <p>
+        {{ form.title.label }}<br>
+        {{ form.title(class="form-control") }}
+    {% for error in form.title.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form.media.label }}<br>
+        {{ form.media(class="form-control") }}
+    {% for error in form.media.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form.content.label }}<br>
+        {{ form.content(class="form-control") }}
+    {% for error in form.content.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+    {% endfor %}
+    </p>
+    <p>{{ form.submit(type="submit", class="btn btn-dark") }}</p>
+</form>
+{% endblock %}

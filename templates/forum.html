@@ -2,15 +2,30 @@
 
 {% block content %}
 <h1>Актуальные треды на форуме</h1>
+<button onclick="location.href='/forum/create_thread'" class="btn btn-dark">Создать новый тред</button>
+<br></br>
 {% if threads %}
 {% for item in threads %}
-    <div class="card">
-      <div class="card-header">{{tem.author_id}}</div>
-      <h5 class="card-title">{{item.title}} {{item.date_of_creation}}</h5>
-      <div class="card-body">
-        <p class="card-text">{{item.content}}</p>
-        <a href="/threads/{{item.id}}" class="btn btn-dark">Перейти к обсуждению</a>
-      </div>
+    <div class="card mb-3" style="max-width: 1200px; max_height: 200px;">
+        <div class="row g-0">
+            {% if item.picture %}
+                 <div class="col-md-4">
+                     <img src="data:image/png;base64,{{item.picture}}" class="img-fluid rounded-start">
+                 </div>
+            {% endif %}
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">{{item.title}}</h5>
+                <p class="card-text">{{item.content}}</p>
+                {% if item.author %}
+                    <p class="card-text"><small class="text-body-secondary"><a href="/account/{{item.author.id}}">{{item.author.username}}</a> {{item.date_of_creation}}</small></p>
+                {% else %}
+                    <p class="card-text"><small class="text-body-secondary">Аноним {{item.date_of_creation}}</small></p>
+                {% endif %}
+                <button onclick="location.href='/forum/{{item.id}}'" class="btn btn-dark">Перейти к треду</button>
+              </div>
+            </div>
+        </div>
     </div>
 {% endfor %}
 {% endif %}

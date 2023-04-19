@@ -10,8 +10,9 @@ class Thread(SqlAlchemyBase):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     title = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    content = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    content = sqlalchemy.Column(sqlalchemy.TEXT, nullable=False)
     author_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     date_of_creation = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
-    is_open = sqlalchemy.Column(sqlalchemy.BOOLEAN, default=True)
+    picture = sqlalchemy.Column(sqlalchemy.TEXT, nullable=True)
     messages = orm.relationship("Message", back_populates='thread')
+    author = orm.relationship("User")

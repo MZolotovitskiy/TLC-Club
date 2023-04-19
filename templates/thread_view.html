@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card mb-3">
+    <div class="row g-0">
+        {% if thread.picture %}
+        <div class="col-md-4">
+            <img src="data:image/png;base64,{{thread.picture}}" class="img-fluid rounded-start">
+        </div>
+        {% endif %}
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{thread.title}}</h5>
+                <p class="card-text">{{thread.content}}</p>
+                {% if thread.author_id %}
+                <p class="card-text"><small class="text-body-secondary">{{thread.author_id}}
+                    {{thread.date_of_creation}}</small></p>
+                {% else %}
+                <p class="card-text"><small class="text-body-secondary">Аноним {{thread.date_of_creation}}</small></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% for message in thread.messages %}
+    <div class="card mb-3" style="max-width: 1200px; max_height: 200px;">
+        <div class="row g-0">
+            {% if message.picture %}
+            <div class="col-md-4">
+                <img src="data:image/png;base64,{{message.picture}}" class="img-fluid rounded-start">
+            </div>
+            {% endif %}
+            <div class="col-md-8">
+                <div class="card-body">
+                    <p class="card-text">{{message.content}}</p>
+                    {% if message.author %}
+                    <p class="card-text"><small class="text-body-secondary"><a href="/account/{{message.author.id}}">{{message.author.username}}</a>
+                        {{message.date_of_creation}}</small></p>
+                    {% else %}
+                    <p class="card-text"><small class="text-body-secondary">Аноним {{message.date_of_creation}}</small></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+<button onclick="location.href='/forum/write_message/{{thread.id}}'" class="btn btn-dark">Выразите своё мнение</button>
+<button onclick="location.href='/forum'" class="btn btn-dark">Обратно на форум</button>
+
+{% endblock %}
