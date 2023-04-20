@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Актуальные обзоры</h1>
+<button onclick="location.href='/reviews/create_review'" class="btn btn-dark">Создать новый обзор</button>
+<br></br>
+{% if reviews %}
+{% for review in reviews %}
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+              <img src="data:image/png;base64,{{review.preview}}" class="card-img-top">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+               <h5 class="card-title">{{review.title}}</h5>
+               <p class="card-text">{{review.content}}</p>
+               <p class="card-text"><small class="text-body-secondary"><a href="/account/{{review.author.id}}">{{review.author.username}}</a> {{review.created_date}}</small></p>
+               <a href="/reviews/{{review.id}}" class="btn btn-dark">Перейти к чтению</a>
+              </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+{% endif %}
+{% endblock %}

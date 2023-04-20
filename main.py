@@ -5,6 +5,7 @@ from flask import Flask, render_template, redirect, session, abort
 from data import db_session
 from data.users import User
 from data.reviews import Review
+from data.review_pictures import ReviewPicture
 from data.threads import Thread
 from data.messages import Message
 from flask_login import LoginManager, login_user, current_user, login_required
@@ -12,6 +13,7 @@ from forms.user import RegisterForm, FinishRegistrationForm, LoginForm
 from mailer import send_email, EMailText
 from forms.services_town_ask import TownForm
 from forms.forum import ThreadForm, MessageForm
+from forms.reviews import ReviewForm
 from functions import search
 import base64
 
@@ -96,8 +98,6 @@ def services(town):
     return render_template('services.html', title=title, services=services)
 
 
-# Тут крч должен быть запрос в БД с поиском юзера с указанным ID
-
 @app.after_request
 def after_request(response):
     for currentdir, dirs, files in os.walk('static/cash'):
@@ -126,7 +126,9 @@ def account(user_id):
 @login_required
 def my_account():
     if current_user.is_authenticated:
-        user = current_user
+        db_sess = db_session.create_session()
+        user = db_sess.get(User, current_user.id)  # Данная строчка может показаться бессмысленной, но
+        # если передать current_user будет ошибка
         return render_template('account.html', title=f'Аккаунт {user.username}', user=user, personal=True)
     else:
         abort(401)
@@ -152,7 +154,6 @@ def create_thread():
 def forum():
     db_sess = db_sess = db_session.create_session()
     threads = []
-    pictures = {}
     for thread in db_sess.query(Thread):
         threads.append(thread)
     return render_template('forum.html', title='Форум', threads=threads)
@@ -193,9 +194,9 @@ def write_message(thread_id):
 @login_required
 def reviews_delete(id):
     db_sess = db_session.create_session()
-    review = db_sess.get("Review", int(id))
-    if news:
-        db_sess.delete(news)
+    review = db_sess.get(Review, int(id))
+    if review:
+        db_sess.delete(review)
         db_sess.commit()
     else:
         abort(404)
@@ -205,7 +206,7 @@ def reviews_delete(id):
 @app.route('/threads_delete/<int:id>')
 @login_required
 def threads_delete(id):
-    db_sess = db_session.create_session()  # Я этот код нашёл в учебнике
+    db_sess = db_session.create_session()
     thread = db_sess.get(Thread, int(id))
     if thread:
         for message in thread.messages:
@@ -215,6 +216,48 @@ def threads_delete(id):
     else:
         abort(404)
     return redirect('/my_account')
+
+
+@app.route('/reviews/create_review', methods=['GET', 'POST'])
+def create_review():
+    form = ReviewForm()
+    if not current_user.is_authenticated:
+        abort(401)
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        review = Review()
+        review.author_id, review.title, review.content, review.preview = current_user.id, form.title.data, \
+            form.content.data, base64.b64encode(form.preview.data.read()).decode('ascii')
+        db_sess.add(review)
+        db_sess.commit()
+        db_sess.flush()
+        review_id = review.id
+        for file in form.media.data:
+            picture = ReviewPicture()
+            picture.review_id, picture.bytes = review_id, base64.b64encode(file.read()).decode('ascii')
+            db_sess.add(picture)
+        db_sess.commit()
+        return redirect('/reviews')
+    return render_template('create_review.html', title='Написание Обзора', form=form)
+
+
+@app.route('/reviews')
+def reviews():
+    db_sess = db_sess = db_session.create_session()
+    reviews = []
+    for review in db_sess.query(Review):
+        reviews.append(review)
+    return render_template('reviews.html', title='Обзоры', reviews=reviews)
+
+
+@app.route('/reviews/<int:id>')
+def review(id):
+    db_sess = db_sess = db_session.create_session()
+    review = db_sess.get(Review, int(id))
+    if review:
+        return render_template('review_view.html', title=review.title, review=review)
+    else:
+        abort(404)
 
 
 @login_manager.user_loader

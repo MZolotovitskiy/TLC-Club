@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{review.title}}</h1>
+<div>
+    {{review.content}}
+</div>
+<div id="carousel" class="carousel slide">
+    <div class="carousel-item active">
+      <img src="data:image/png;base64,{{review.pictures [0].bytes}}" class="d-block w-100 h-200">
+    </div>
+    {% for picture in review.pictures[1:] %}
+    <div class="carousel-item">
+        <img src="data:image/png;base64,{{picture.bytes}}" class="d-block w-100 h-200">
+    </div>
+    {% endfor %}
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next" style="align-items: flex-center;">
+      <span class="visually-hidden">Next</span>
+    </button>
+</div>
+{% endblock %}
