@@ -7,7 +7,7 @@ from data.users import User
 from data.reviews import Review
 from data.threads import Thread
 from data.messages import Message
-from flask_login import LoginManager, login_user, current_user
+from flask_login import LoginManager, login_user, current_user, login_required
 from forms.user import RegisterForm, FinishRegistrationForm, LoginForm
 from mailer import send_email, EMailText
 from forms.services_town_ask import TownForm
@@ -113,16 +113,23 @@ def after_request(response):
 def account(user_id):
     db_sess = db_session.create_session()
     user = db_sess.get(User, int(user_id))
-    if user:
-        reviews, threads = [], []
-        for review in db_sess.query(Review).filter(Review.author_id == user_id):
-            reviews.append(review)
-        for thread in db_sess.query(Thread).filter(Thread.author_id == user_id):
-            threads.append(thread)
-        return render_template('account.html', title=f'Аккаунт {user.username}',
-                               user=user, reviews=reviews, threads=threads)
+    if current_user.is_authenticated:
+        if user_id == current_user.id:
+            return redirect('/my_account')
+    elif user:
+        return render_template('account.html', title=f'Аккаунт {user.username}', user=user)
     else:
         abort(404)
+
+
+@app.route('/my_account')
+@login_required
+def my_account():
+    if current_user.is_authenticated:
+        user = current_user
+        return render_template('account.html', title=f'Аккаунт {user.username}', user=user, personal=True)
+    else:
+        abort(401)
 
 
 @app.route('/forum/create_thread', methods=['GET', 'POST'])
@@ -182,41 +189,32 @@ def write_message(thread_id):
     return render_template('create_message.html', title='Написание сообщения', form=form)
 
 
-@app.route('/myaccount')
-@login_required
-def myaccount():
-    return render_template('account.html', title=f'Аккаунт {u.username}', user=u, reviews=reviews,
-                           threads=reviews, personal=True)
-
-
 @app.route('/reviews_delete/<int:id>')
 @login_required
 def reviews_delete(id):
-    # db_sess = db_session.create_session()                         # Я этот код нашёл в учебнике
-    # news = db_sess.query(Review).filter(News.id == id,              # Подключи к нашей БД
-    #                                   News.user == current_user
-    #                                   ).first()
-    # if news:
-    #     db_sess.delete(news)
-    #     db_sess.commit()
-    # else:
-    #     abort(404)
-    return redirect('/myaccount')
+    db_sess = db_session.create_session()
+    review = db_sess.get("Review", int(id))
+    if news:
+        db_sess.delete(news)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/my_account')
 
 
 @app.route('/threads_delete/<int:id>')
 @login_required
 def threads_delete(id):
-    # db_sess = db_session.create_session()
-    # news = db_sess.query(Thread).filter(News.id == id,
-    #                                   News.user == current_user
-    #                                   ).first()
-    # if news:
-    #     db_sess.delete(news)
-    #     db_sess.commit()
-    # else:
-    #     abort(404)
-    return redirect('/myaccount')
+    db_sess = db_session.create_session()  # Я этот код нашёл в учебнике
+    thread = db_sess.get(Thread, int(id))
+    if thread:
+        for message in thread.messages:
+            db_sess.delete(message)
+        db_sess.delete(thread)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/my_account')
 
 
 @login_manager.user_loader

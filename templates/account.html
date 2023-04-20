@@ -4,9 +4,9 @@
 
 <h1>{{user.username}}</h1>
 <h3>{{user.email}}</h3>
-{% if reviews %}
+{% if user.reviews %}
     <h2>Обзоры</h2>
-    {% for item in reviews %}
+    {% for item in user.reviews %}
         <div class="card">
           <div class="card-header">{{item.title}}</div>
           <div class="card-body">
@@ -37,12 +37,12 @@
         </div>
     {% endfor %}
 {%else%}
-    <h2>Обзоров нету</h2>
+    <h2>Обзоры отсутствуют</h2>
 {%endif%}
 
-{% if threads %}
+{% if user.threads %}
     <h2>Треды</h2>
-    {% for item in threads %}
+    {% for item in user.threads %}
         <div class="card">
           <div class="card-header">{{item.title}}</div>
           <div class="card-body">
@@ -73,7 +73,7 @@
         </div>
     {% endfor %}
 {%else%}
-    <h2>Тредов нету</h2>
+    <h2>Треды отсутствуют</h2>
 {%endif%}
 
 

@@ -12,6 +12,5 @@ class Review(SqlAlchemyBase):
     title = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     content = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     author_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
-    # возможности для дальнейшей модификации
-    # created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
-    #  is_private = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
+    created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
+    author = orm.relationship("User")

@@ -2,17 +2,19 @@ import datetime
 import sqlalchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-# from sqlalchemy import orm
+from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 
 
 class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
 
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)  # index = ??
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     email = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=False)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     username = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=False)
+    threads = orm.relationship("Thread", back_populates='author')
+    reviews = orm.relationship("Review", back_populates='author')
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
