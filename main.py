@@ -96,6 +96,8 @@ def services(town):
     return render_template('services.html', title=title, services=services)
 
 
+# Тут крч должен быть запрос в БД с поиском юзера с указанным ID
+
 @app.after_request
 def after_request(response):
     for currentdir, dirs, files in os.walk('static/cash'):
@@ -180,15 +182,47 @@ def write_message(thread_id):
     return render_template('create_message.html', title='Написание сообщения', form=form)
 
 
+@app.route('/myaccount')
+@login_required
+def myaccount():
+    return render_template('account.html', title=f'Аккаунт {u.username}', user=u, reviews=reviews,
+                           threads=reviews, personal=True)
+
+
+@app.route('/reviews_delete/<int:id>')
+@login_required
+def reviews_delete(id):
+    # db_sess = db_session.create_session()                         # Я этот код нашёл в учебнике
+    # news = db_sess.query(Review).filter(News.id == id,              # Подключи к нашей БД
+    #                                   News.user == current_user
+    #                                   ).first()
+    # if news:
+    #     db_sess.delete(news)
+    #     db_sess.commit()
+    # else:
+    #     abort(404)
+    return redirect('/myaccount')
+
+
+@app.route('/threads_delete/<int:id>')
+@login_required
+def threads_delete(id):
+    # db_sess = db_session.create_session()
+    # news = db_sess.query(Thread).filter(News.id == id,
+    #                                   News.user == current_user
+    #                                   ).first()
+    # if news:
+    #     db_sess.delete(news)
+    #     db_sess.commit()
+    # else:
+    #     abort(404)
+    return redirect('/myaccount')
+
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.get(User, int(user_id))
-
-
-@app.route('/myaccount')
-def myaccount():
-    abort(503)
 
 
 def main():
