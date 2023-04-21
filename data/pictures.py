@@ -4,7 +4,7 @@ from .db_session import SqlAlchemyBase
 
 
 class Picture(SqlAlchemyBase):
-    __tablename__ = 'news'
+    __tablename__ = 'photos'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     model = sqlalchemy.Column(sqlalchemy.String, nullable=True)

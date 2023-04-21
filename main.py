@@ -6,6 +6,7 @@ from data.news import News
 from forms.form_news import NewsForm
 from requests import request
 from os import abort
+import sqlite3
 
 # Данные для входа с целью отладки/проверки
 # user: Test User
@@ -69,6 +70,14 @@ def edit_news(id):
                            title='Редактирование новости',
                            form=form
                            )
+
+@app.route('/photos', methods=['GET'])
+def photos():
+    db_sess = db_session.create_session()
+    sp, model = [], db_sess.query(photos).first().model
+    for url in db_sess.query(photos).all():
+        sp.append(url.url)
+    return render_template('photos.html', title=model, photos=sp)
 
 
 def main():
