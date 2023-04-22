@@ -8,6 +8,7 @@ from data.reviews import Review
 from data.review_pictures import ReviewPicture
 from data.threads import Thread
 from data.messages import Message
+from data.news import News
 from flask_login import LoginManager, login_user, current_user, login_required
 from forms.user import RegisterForm, FinishRegistrationForm, LoginForm
 from mailer import send_email, EMailText
@@ -322,67 +323,22 @@ def change_review(review_id):
 
 
 @app.route('/news')
-def index():
-    db_sess = db_session.create_session()
-    news = db_sess.query(News)
-    # .filter(News.is_private != True) - возможности для улучшения
-    return render_template("show_news.html", news=news)
+def news_view():
+    db_sess = db_sess = db_session.create_session()
+    news_ = []
+    for news in db_sess.query(News):
+        news_.append(news)
+    return render_template('news.html', title='Новости', news=news_)
 
 
-@app.route('/news', methods=['GET', 'POST'])
-def add_news():
-    form = NewsForm()
-    if form.validate_on_submit():
-        db_sess = db_session.create_session()
-        news = News()
-        news.title = form.title.data
-        news.content = form.content.data
-        current_user.news.append(news)
-        db_sess.merge(current_user)
-        db_sess.commit()
-        return redirect('/')
-    return render_template('news.html', title='Добавление новости',
-                           form=form)
-
-
-@app.route('/news/<int:id>', methods=['GET', 'POST'])
-def edit_news(id):
-    form = NewsForm()
-    if request.method == "GET":
-        db_sess = db_session.create_session()
-        news = db_sess.query(News).filter(News.id == id,
-                                          News.user == current_user
-                                          ).first()
-        if news:
-            form.title.data = news.title
-            form.content.data = news.content
-        else:
-            abort(404)
-    if form.validate_on_submit():
-        db_sess = db_session.create_session()
-        news = db_sess.query(News).filter(News.id == id,
-                                          News.user == current_user
-                                          ).first()
-        if news:
-            news.title = form.title.data
-            news.content = form.content.data
-            db_sess.commit()
-            return redirect('/')
-        else:
-            abort(404)
-    return render_template('news.html',
-                           title='Редактирование новости',
-                           form=form
-                           )
-
-
-@app.route('/photos', methods=['GET'])
-def photos():
-    db_sess = db_session.create_session()
-    sp, model = [], db_sess.query(photos).first().model
-    for url in db_sess.query(photos).all():
-        sp.append(url.url)
-    return render_template('photos.html', title=model, photos=sp)
+@app.route('/news/<int:id>')
+def news(id):
+    db_sess = db_sess = db_session.create_session()
+    news = db_sess.get(News, int(id))
+    if news:
+        return render_template('news_view.html', title=news.title, news=news)
+    else:
+        abort(404)
 
 
 @login_manager.user_loader

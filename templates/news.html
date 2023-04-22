@@ -1,28 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Добавление новости</h1>
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.title.label }}<br>
-        {{ form.title(class="form-control") }}<br>
-        {% for error in form.title.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.content.label }}<br>
-        {{ form.content(class="form-control") }}<br>
-        {% for error in form.content.errors %}
-            <p content="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-    {{message}}
-</form>
+<h1>Новости про TLC</h1>
+<br></br>
+{% if news %}
+{% for news_ in news %}
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+              <img src="data:image/png;base64,{{news_.preview}}" class="card-img-top">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+               <h5 class="card-title">{{news_.title}}</h5>
+               <p class="card-text">{{news_.content}}</p>
+               <a href="/news/{{news_.id}}" class="btn btn-dark">Перейти к чтению</a>
+              </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+{% endif %}
 {% endblock %}
