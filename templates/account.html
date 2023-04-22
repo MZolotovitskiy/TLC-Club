@@ -13,7 +13,7 @@
             <p class="card-text">{{item.content}}</p>
             <a href="/reviews/{{item.id}}" class="btn btn-dark">Перейти к чтению</a>
                 {% if personal %}
-                    <a href="/reviews/{{item.id}}/change" class="btn btn-warning">Изменить</a>
+                    <a href="/reviews/edit/{{item.id}}" class="btn btn-warning">Изменить</a>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ReviewModal">Удалить</button>
                     <div class="modal fade" id="ReviewModal" tabindex="-1" aria-labelledby="ReviewModalLabel" aria-hidden="true">
                       <div class="modal-dialog">
@@ -49,7 +49,7 @@
             <p class="card-text">{{item.content}}</p>
             <a href="/threads/{{item.id}}" class="btn btn-dark">Перейти к обсуждению</a>
                 {% if personal %}
-                    <a href="/threads/{{item.id}}/change" class="btn btn-warning">Изменить</a>
+                    <a href="/forum/edit/{{item.id}}" class="btn btn-warning">Изменить</a>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ThreadsModal">Удалить</button>
                     <div class="modal fade" id="ThreadsModal" tabindex="-1" aria-labelledby="ThreadsModalLabel" aria-hidden="true">
                       <div class="modal-dialog">
@@ -63,7 +63,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Отмена</button>
-                            <a type="button" class="btn btn-danger" href="/threads_delete/{{item.id}}">Удалить</a>
+                            <a type="button" class="btn btn-danger" href="/forum/delete/{{item.id}}">Удалить</a>
                           </div>
                         </div>
                       </div>

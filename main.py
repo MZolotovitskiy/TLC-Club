@@ -203,7 +203,7 @@ def reviews_delete(id):
     return redirect('/my_account')
 
 
-@app.route('/threads_delete/<int:id>')
+@app.route('/forum/delete/<int:id>')
 @login_required
 def threads_delete(id):
     db_sess = db_session.create_session()
@@ -256,6 +256,67 @@ def review(id):
     review = db_sess.get(Review, int(id))
     if review:
         return render_template('review_view.html', title=review.title, review=review)
+    else:
+        abort(404)
+
+
+@app.route('/forum/edit/<int:thread_id>', methods=['GET', 'POST'])
+@login_required
+def change_thread(thread_id):
+    form = ThreadForm()
+    db_sess = db_sess = db_session.create_session()
+    thread = db_sess.get(Thread, int(thread_id))
+    if thread:
+        if current_user.is_authenticated:
+            if current_user.id == thread.author.id:
+                if form.validate_on_submit():
+                    thread.title = form.title.data
+                    if form.media.data:
+                        thread.picture = base64.b64encode(form.media.data.read()).decode('ascii')
+                    thread.content = form.content.data
+                    db_sess.commit()
+                    return redirect('/forum')
+                else:
+                    form.title.data = thread.title
+                    form.content.data = thread.content
+                    return render_template('create_thread.html', title='Редактирование Треда', form=form)
+            else:
+                abort(403)
+        else:
+            abort(401)
+    else:
+        abort(404)
+
+
+@app.route('/reviews/edit/<int:review_id>', methods=['GET', 'POST'])
+@login_required
+def change_review(review_id):
+    form = ReviewForm()
+    db_sess = db_sess = db_session.create_session()
+    review = db_sess.get(Review, int(review_id))
+    if review:
+        if current_user.is_authenticated:
+            if current_user.id == review.author.id:
+                if form.validate_on_submit():
+                    review.title = form.title.data
+                    if form.preview.data:
+                        review.preview = base64.b64encode(form.preview.data.read()).decode('ascii')
+                    if form.media.data:
+                        for file in form.media.data:
+                            picture = ReviewPicture()
+                            picture.review_id, picture.bytes = review.id, base64.b64encode(file.read()).decode('ascii')
+                            db_sess.add(picture)
+                    review.content = form.content.data
+                    db_sess.commit()
+                    return redirect('/reviews')
+                else:
+                    form.title.data = review.title
+                    form.content.data = review.content
+                    return render_template('create_review.html', title='Редактирование Обзора', form=form)
+            else:
+                abort(403)
+        else:
+            abort(401)
     else:
         abort(404)
 
